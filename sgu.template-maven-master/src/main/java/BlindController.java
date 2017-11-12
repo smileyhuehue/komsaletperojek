@@ -26,7 +26,7 @@ public class BlindController implements Actor {
 	}
 
 	@Override
-	public void update() {
+	public void update(GUI gui) {
 		boolean onOrOff = false;
 		System.out.println("========");
 		System.out.println("BLIND");
@@ -34,6 +34,7 @@ public class BlindController implements Actor {
 		System.out.println("clock:"+String.valueOf(interfaceSensor.get(2).getTimeGUI()));//clock
 		System.out.println("========");
 		setBlind(onOrOff);
+		System.out.println("counter :"+gui.getCount());
 
 	}
 

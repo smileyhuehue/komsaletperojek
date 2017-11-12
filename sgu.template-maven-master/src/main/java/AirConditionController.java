@@ -25,7 +25,7 @@ public class AirConditionController implements Actor {
 	}
 
 	@Override
-	public void update() {
+	public void update(GUI gui) {
 		double temp = 0;
 		System.out.println("========");
 		System.out.println("AirCondition");
@@ -34,6 +34,7 @@ public class AirConditionController implements Actor {
 		System.out.println("clock:"+String.valueOf(interfaceSensor.get(2).getTimeGUI()));//clock
 		System.out.println("========");
 		setTemperature(temp);
+		System.out.println("counter :"+gui.getCount());
 
 	}
 

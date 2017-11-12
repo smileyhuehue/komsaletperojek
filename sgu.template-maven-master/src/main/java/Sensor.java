@@ -4,7 +4,12 @@ public class Sensor {
 	private BlindController blindController = new BlindController();
 	private AirConditionController airConditionController = new AirConditionController();
 	private ArrayList<InterfaceSensor> interfaceSensor = new ArrayList<InterfaceSensor>();
+	private GUI gui;
 	
+	public Sensor(GUI gui) {
+		this.gui=gui;
+	}
+
 	public void addSensor(InterfaceSensor sensor){
 		interfaceSensor.add(sensor);
 	}
@@ -19,8 +24,8 @@ public class Sensor {
 		blindController.setInterfaceSensor(interfaceSensor);
 		airConditionController.setInterfaceSensor(interfaceSensor);
 		
-		blindController.update();
-		airConditionController.update();
+		blindController.update(gui);
+		airConditionController.update(gui);
 	}
 	
 	public void print(String text){

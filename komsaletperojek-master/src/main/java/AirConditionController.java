@@ -35,7 +35,7 @@ public class AirConditionController implements Actor {// implements observer to
 	@Override
 	public void update() {
 
-		// energySavingMode = gui.getEnergySavingMode(); //tambahan buat gino
+		 energySavingMode = gui.getEnergySavingMode(); //tambahan buat gino
 
 		Object object = interfaceSensor.get(0).getValue();
 		double windGUI = ((Double) object).doubleValue();

@@ -35,7 +35,8 @@ public class GUI{
     private static ChangeListener listener1,listener2,listener3;
     private static ActionListener listener4;
     private static JLabel gordyn,energy;
-    private static boolean OnOff;
+    private static JToggleButton toggleEnergy;
+    private static boolean OnOff,toggleEnergySvg;
     private static double temp,windSpeed;
     private static int time;
     private static double temp2,energySvg;
@@ -154,22 +155,7 @@ public class GUI{
      c.gridy = 3;
      pane.add(gordyn,c);
      
-//     listener3 = new ChangeListener()
-//     {
-//  	   public void stateChanged(ChangeEvent event)
-//  	   {
-//  		   JToggleButton tgl = (JToggleButton)event.getSource();
-//  		 if(tgl.isSelected()){
-//  			 System.out.println("selected");
-//  			 OnOff=true;
-//  		 }else{
-//  			 System.out.println("not selected");
-//  			 OnOff=false;
-//  		 }
-//  	   }
-//  	};
-//  	gordyn.addChangeListener(listener3);
-  	
+
   	clockInput = new JTextField(5);
 //  	((AbstractDocument)clockInput.getDocument()).setDocumentFilter(new DocumentFilter(){
 //        Pattern regEx = Pattern.compile("\\d*");
@@ -221,6 +207,28 @@ public class GUI{
     c.gridwidth=1;
     c.gridheight=1;
     pane.add(energy, c);
+    
+    toggleEnergy = new JToggleButton("Energy Saving On/Off");
+    c.gridx = 0;
+    c.gridy = 5;
+  listener3 = new ChangeListener()
+  {
+	   public void stateChanged(ChangeEvent event)
+	   {
+		   JToggleButton tgl = (JToggleButton)event.getSource();
+		 if(tgl.isSelected()){
+			 System.out.println("selected");
+			 toggleEnergySvg=true;
+		 }else{
+			 System.out.println("not selected");
+			 toggleEnergySvg=false;
+		 }
+	   }
+	};
+	toggleEnergy.addChangeListener(listener3);
+    pane.add(toggleEnergy, c);
+    
+    
     }
         
     public static void addSlider(JSlider s, String description,Container pane,GridBagConstraints c,ChangeListener listener)
@@ -287,6 +295,11 @@ public class GUI{
     public void setEnergy(double energySvg){
     	DecimalFormat df = new DecimalFormat("#.00");
     	this.energySvg = Double.parseDouble(df.format(energySvg));
+    }
+    
+    public boolean getEnergySavingMode(){
+    	
+		return toggleEnergySvg;
     }
  	    	
 }

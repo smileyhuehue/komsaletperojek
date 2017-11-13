@@ -40,6 +40,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Observer;
 
@@ -63,11 +64,11 @@ public class GUI{
     private static JLabel textField;
     private static ChangeListener listener1,listener2,listener3;
     private static ActionListener listener4;
-    private static JLabel gordyn;
+    private static JLabel gordyn,energy;
     private static boolean OnOff;
     private static double temp,windSpeed;
     private static int time;
-    private static double temp2;
+    private static double temp2,energySvg;
 
     public static void addComponentsToPane(Container pane) {
         if (RIGHT_TO_LEFT) {
@@ -95,6 +96,7 @@ public class GUI{
 			}else{
 				gordyn.setText("OFF");
 			}
+	      energy.setText(energySvg+"%");
 	   }
 	};
 
@@ -114,12 +116,12 @@ public class GUI{
 	
 	
 	// add a slider with numeric labels
-	slider = new JSlider();
+	slider = new JSlider(16,37);
 	slider.setPaintTicks(true);
 	slider.setPaintLabels(true);
 	slider.setSnapToTicks(true);
-//	slider.setMajorTickSpacing(10);
-//	slider.setMinorTickSpacing(10);
+	slider.setMajorTickSpacing(21);
+	slider.setMinorTickSpacing(1);
 	c.weightx = 0.5;
 	c.gridx = 1;
 	c.gridy = 1;
@@ -133,12 +135,12 @@ public class GUI{
     pane.add(textField,c);
     
  // add a slider with numeric labels
- 	JSlider anemometer = new JSlider();
+ 	JSlider anemometer = new JSlider(0,80);
  	anemometer.setPaintTicks(true);
  	anemometer.setPaintLabels(true);
  	anemometer.setSnapToTicks(true);
-// 	anemometer.setMajorTickSpacing(20);
-// 	anemometer.setMinorTickSpacing(5);
+ 	anemometer.setMajorTickSpacing(80);
+ 	anemometer.setMinorTickSpacing(1);
  	c.weightx = 0.5;
  	c.gridx = 1;
  	c.gridy = 3;
@@ -230,10 +232,15 @@ public class GUI{
 				}
 	        }
 	    });
+    
+    energy = new JLabel("Energy Saving Off");
+    c.gridx = 0;
+    c.gridy = 3;
+    c.gridwidth=1;
+    c.gridheight=1;
+    pane.add(energy, c);
     }
-    
-    
-    
+        
     public static void addSlider(JSlider s, String description,Container pane,GridBagConstraints c,ChangeListener listener)
     {
       s.addChangeListener(listener);
@@ -295,6 +302,9 @@ public class GUI{
     	return windSpeed;
     }
     
-
+    public void setEnergy(double energySvg){
+    	DecimalFormat df = new DecimalFormat("#.00");
+    	this.energySvg = Double.parseDouble(df.format(energySvg));
+    }
  	    	
 }

@@ -36,11 +36,11 @@ public class AirConditionController implements Actor{//implements observer to ob
 			    
 	    Object object = interfaceSensor.get(0).getValue();
 	    double windGUI = ((Double)object).doubleValue();
-	    System.out.println("WIND:"+windGUI);
+	    //System.out.println("WIND:"+windGUI);
 		
 	    object = interfaceSensor.get(1).getValue();
 	    double tempGUI = ((Double)object).doubleValue();
-	    System.out.println("TEMP"+tempGUI);
+	   // System.out.println("TEMP"+tempGUI);
 	    
 	    object = interfaceSensor.get(2).getValue();
 	    int timeGUI = ((Integer)object).intValue();
@@ -64,7 +64,14 @@ public class AirConditionController implements Actor{//implements observer to ob
 	    else if(tempGUI==32 && windGUI>30){
 	    	temp=27;
 	    }
+	    
+	    double saving=0;
+	    saving = 100 - (Math.abs((27-tempGUI)/(38-tempGUI)*100));
+	    if(saving<=0){
+	    	saving=0;
+	    }
 
+	    gui.setEnergy(saving);
 		setTemperature(temp);
 
 	}

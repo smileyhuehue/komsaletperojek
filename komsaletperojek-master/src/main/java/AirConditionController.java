@@ -2,16 +2,16 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class AirConditionController implements Actor {// implements observer to
-														// observe changes in
-														// GUI
+public class AirConditionController implements Actor {
 
 	private ArrayList<InterfaceSensor> interfaceSensor;
 	private GUI gui;
 	private double temp = 0;
 	private boolean energySavingMode = true;
-	private double desiredEnergySaving = 10;
-
+	private double desiredEnergySaving = 80;
+	private ArrayList<Double> energySaveAL = new ArrayList<Double>();
+	private double cost=0;
+	
 	public AirConditionController(GUI gui) {
 		this.gui = gui;
 	}
@@ -35,7 +35,7 @@ public class AirConditionController implements Actor {// implements observer to
 	@Override
 	public void update() {
 
-		 energySavingMode = gui.getEnergySavingMode(); //tambahan buat gino
+		energySavingMode = gui.getEnergySavingMode();
 
 		Object object = interfaceSensor.get(0).getValue();
 		double windGUI = ((Double) object).doubleValue();
@@ -53,11 +53,7 @@ public class AirConditionController implements Actor {// implements observer to
 			if (!energySavingMode) {
 				temp = 27;
 			} else {
-				if (tempGUI < 27)
-					temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
-				else {
-					temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
-				}
+				bestTemperature(tempGUI);
 
 			}
 		} else {
@@ -65,11 +61,7 @@ public class AirConditionController implements Actor {// implements observer to
 				if (!energySavingMode) {
 					temp = 27;
 				} else {
-					if (tempGUI < 27)
-						temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
-					else {
-						temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
-					}
+					bestTemperature(tempGUI);
 
 				}
 			} else {
@@ -81,11 +73,7 @@ public class AirConditionController implements Actor {// implements observer to
 				if (!energySavingMode) {
 					temp = 27;
 				} else {
-					if (tempGUI < 27)
-						temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
-					else {
-						temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
-					}
+					bestTemperature(tempGUI);
 
 				}
 			}
@@ -100,10 +88,19 @@ public class AirConditionController implements Actor {// implements observer to
 		} else {
 			saving = desiredEnergySaving;
 		}
-
+		//energySaveAL.add(saving);
 		gui.setEnergy(saving);
-		setTemperature(temp);
+		setTemperature(temp);	
+		cost = cost + ((100-saving)*0.000001);
+		gui.setCost(cost);
+	}
 
+	private void bestTemperature(double tempGUI) {
+		if (tempGUI <= 27) {
+			temp = (tempGUI + (((38 - tempGUI) / desiredEnergySaving)));
+		} else {
+			temp = ((((desiredEnergySaving - 100) * (38 - tempGUI)) / 100) + tempGUI);
+		}
 	}
 
 }

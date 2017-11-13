@@ -1,3 +1,5 @@
+import javafx.stage.Stage;
+
 public class Tester {
 
 	public static void main(String[] args) {

@@ -1,39 +1,3 @@
-/*
- * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- *   - Neither the name of Oracle or the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
-
-
-
-/*
- * GridBagLayoutDemo.java requires no other files.
- */
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -43,19 +7,25 @@ import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Observer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.print.attribute.AttributeSet;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class GUI{
-	private ArrayList<Observer> controllers = new ArrayList<Observer>();
 	
     final static boolean shouldFill = true;
     final static boolean shouldWeightX = true;
@@ -85,7 +55,7 @@ public class GUI{
 	     // textField.setText("" + source.getValue());
 //	      System.out.println("inside : "+temp2);
 	      if(temp2!=-1){
-	    	  textField.setText(temp2+"");
+	    	  textField.setText(temp2+" °C");
 	      }
 	      else{
 	    	  textField.setText("AC OFF");
@@ -104,15 +74,21 @@ public class GUI{
 	pane.setLayout(new GridBagLayout());
 	GridBagConstraints c = new GridBagConstraints();
 	if (shouldFill) {
-	//natural height, maximum width
-	c.fill = GridBagConstraints.HORIZONTAL;
+		//natural height, maximum width
+		c.fill = GridBagConstraints.HORIZONTAL;
 	}
 	  
-	JLabel label = new JLabel("Temperature");
+	JLabel label = new JLabel("AC");
+	c.weightx = 0.5;
+	c.gridx = 0;
+	c.gridy = 0;
+	pane.add(label, c);
+	
+	JLabel label2 = new JLabel("Temperature");
 	c.weightx = 0.5;
 	c.gridx = 1;
 	c.gridy = 0;
-	pane.add(label, c);
+	pane.add(label2, c);
 	
 	
 	// add a slider with numeric labels
@@ -120,14 +96,14 @@ public class GUI{
 	slider.setPaintTicks(true);
 	slider.setPaintLabels(true);
 	slider.setSnapToTicks(true);
-	slider.setMajorTickSpacing(10);
+	slider.setMajorTickSpacing(21);
 	slider.setMinorTickSpacing(1);
 	c.weightx = 0.5;
 	c.gridx = 1;
 	c.gridy = 1;
 	addSlider(slider,"",pane,c,listener1);
 	
-	textField = new JLabel("0");
+	textField = new JLabel("16 °C");
     c.gridx = 0;
     c.gridy = 1;
     c.gridwidth=1;
@@ -168,11 +144,14 @@ public class GUI{
      c.gridheight=1;
      pane.add(anemo,c);
      
-     gordyn = new JLabel("OFF");
+     JLabel gordynLabel = new JLabel("Gordyn");
      c.gridx = 0;
      c.gridy = 2;
-     c.gridwidth=1;
-     c.gridheight=1;
+     pane.add(gordynLabel,c);
+     
+     gordyn = new JLabel("OFF");
+     c.gridx = 0;
+     c.gridy = 3;
      pane.add(gordyn,c);
      
 //     listener3 = new ChangeListener()
@@ -191,31 +170,34 @@ public class GUI{
 //  	};
 //  	gordyn.addChangeListener(listener3);
   	
-  	clockInput = new JTextField();
+  	clockInput = new JTextField(5);
+//  	((AbstractDocument)clockInput.getDocument()).setDocumentFilter(new DocumentFilter(){
+//        Pattern regEx = Pattern.compile("\\d*");
+//        CharSequence arg3 = "asd";
+//        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {          
+//            Matcher matcher = regEx.matcher();
+//            if(!matcher.matches()){
+//                return;
+//            }
+//            super.replace(fb, offset, length, text, attrs);
+//        }
+//    });
   	c.gridx = 1;
-    c.gridy = 4;
-    c.gridwidth=1;
-    c.gridheight=1;
+    c.gridy = 5;
+    c.gridwidth=2;
     pane.add(clockInput, c);
     
-//    clockInput.addActionListener(new ActionListener() {
-//      		@Override
-//		public void actionPerformed(ActionEvent e) {
-//			// TODO Auto-generated method stub
-//      		time = Integer.parseInt(clockInput.getText());
-//			char[] timeDot = (time+"-").toCharArray();
-//			timeDot[4] = timeDot[3];
-//			timeDot[3] = timeDot[2];
-//			timeDot[2] = ':';
-//			String finalTime = String.valueOf(timeDot);
-//			clockInput.setText(finalTime);
-//			if(OnOff){
-//				gordyn.setText("ON");
-//			}else{
-//				gordyn.setText("OFF");
-//			}
-//		}
-//    });
+    clockInput.addKeyListener(new java.awt.event.KeyAdapter() {
+
+    public void keyReleased(java.awt.event.KeyEvent evt) {
+        try {
+            long number = Long.parseLong(clockInput.getText());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(pane, "Only Numbers Allowed");
+            clockInput.setText("");
+        }
+    }
+});
     clockInput.addKeyListener(new KeyAdapter() {
 	        public void keyReleased(KeyEvent e) {
 	        	time = Integer.parseInt(clockInput.getText());
@@ -235,7 +217,7 @@ public class GUI{
     
     energy = new JLabel("Energy Saving Off");
     c.gridx = 0;
-    c.gridy = 3;
+    c.gridy = 4;
     c.gridwidth=1;
     c.gridheight=1;
     pane.add(energy, c);

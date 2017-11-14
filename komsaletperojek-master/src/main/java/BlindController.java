@@ -5,12 +5,11 @@ import java.util.Observer;
 public class BlindController implements Actor {
 
 	private ArrayList<InterfaceSensor> interfaceSensor;
-	GUI gui;// added supaya controller bisa konek ke GUI
-	boolean onOrOff = false;
+	private GUI gui;
+	private boolean onOrOff = false;
 
 	public BlindController(GUI gui) {
-		// TODO Auto-generated constructor stub
-		this.gui = gui;// added supaya controller bisa konek ke GUI
+		this.gui = gui;
 	}
 
 	@Override

@@ -2,15 +2,18 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class AirConditionController implements Actor{//implements observer to observe changes in GUI
+public class AirConditionController implements Actor {// implements observer to
+														// observe changes in
+														// GUI
 
 	private ArrayList<InterfaceSensor> interfaceSensor;
-	GUI gui;//added supaya controller bisa konek ke GUI
-	double temp=0;
-	
+	private GUI gui;
+	private double temp = 0;
+	private boolean energySavingMode = true;
+	private double desiredEnergySaving = 10;
+
 	public AirConditionController(GUI gui) {
-		// TODO Auto-generated constructor stub
-		this.gui=gui;//added supaya controller bisa konek ke GUI
+		this.gui = gui;
 	}
 
 	@Override
@@ -20,8 +23,6 @@ public class AirConditionController implements Actor{//implements observer to ob
 
 	@Override
 	public void setTemperature(double temp) {
-	//	System.out.println("Temperature : "+ temp);
-//		interfaceSensor.get(1);
 		gui.setTemp(temp);
 	}
 
@@ -33,45 +34,74 @@ public class AirConditionController implements Actor{//implements observer to ob
 
 	@Override
 	public void update() {
-			    
-	    Object object = interfaceSensor.get(0).getValue();
-	    double windGUI = ((Double)object).doubleValue();
-	    //System.out.println("WIND:"+windGUI);
-		
-	    object = interfaceSensor.get(1).getValue();
-	    double tempGUI = ((Double)object).doubleValue();
-	   // System.out.println("TEMP"+tempGUI);
-	    
-	    object = interfaceSensor.get(2).getValue();
-	    int timeGUI = ((Integer)object).intValue();
-	    //System.out.println(timeGUI);
-	    
-	    if(timeGUI>=2100 && timeGUI<=600){
-	    	temp= 27;
-	    }
-	    else{
-	    	if(tempGUI>=34){
-	    		temp = 27;
-	    	}
-	    	else{
-	    		temp=-1;
-	    	}
-	    }
-	    
-	    if(tempGUI<=24){
-	    	temp=-1;
-	    }
-	    else if(tempGUI==32 && windGUI>30){
-	    	temp=27;
-	    }
-	    
-	    double saving=0;
-	    saving = 100 - (Math.abs((27-tempGUI)/(38-tempGUI)*100));
-	    if(saving<=0){
-	    	saving=0;
-	    }
 
-	    gui.setEnergy(saving);
+		// energySavingMode = gui.getEnergySavingMode(); //tambahan buat gino
+
+		Object object = interfaceSensor.get(0).getValue();
+		double windGUI = ((Double) object).doubleValue();
+		// System.out.println("WIND:"+windGUI);
+
+		object = interfaceSensor.get(1).getValue();
+		double tempGUI = ((Double) object).doubleValue();
+		// System.out.println("TEMP"+tempGUI);
+
+		object = interfaceSensor.get(2).getValue();
+		int timeGUI = ((Integer) object).intValue();
+		// System.out.println(timeGUI);
+
+		if (timeGUI >= 2100 || timeGUI <= 600) {
+			if (!energySavingMode) {
+				temp = 27;
+			} else {
+				if (tempGUI < 27)
+					temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
+				else {
+					temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
+				}
+
+			}
+		} else {
+			if (tempGUI >= 34) {
+				if (!energySavingMode) {
+					temp = 27;
+				} else {
+					if (tempGUI < 27)
+						temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
+					else {
+						temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
+					}
+
+				}
+			} else {
+				temp = -1;
+			}
+			if (tempGUI <= 24) {
+				temp = -1;
+			} else if (tempGUI == 32 && windGUI > 30) {
+				if (!energySavingMode) {
+					temp = 27;
+				} else {
+					if (tempGUI < 27)
+						temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
+					else {
+						temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
+					}
+
+				}
+			}
+		}
+
+		double saving = 0;
+		if (!energySavingMode) {
+			saving = 100 - (Math.abs((27 - tempGUI) / (38 - tempGUI) * 100));
+			if (saving <= 0) {
+				saving = 0;
+			}
+		} else {
+			saving = desiredEnergySaving;
+		}
+
+		gui.setEnergy(saving);
 		setTemperature(temp);
 
 	}

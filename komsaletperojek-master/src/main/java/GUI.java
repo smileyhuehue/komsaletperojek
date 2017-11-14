@@ -120,7 +120,7 @@ public class GUI{
 	slider.setPaintTicks(true);
 	slider.setPaintLabels(true);
 	slider.setSnapToTicks(true);
-	slider.setMajorTickSpacing(21);
+	slider.setMajorTickSpacing(10);
 	slider.setMinorTickSpacing(1);
 	c.weightx = 0.5;
 	c.gridx = 1;
